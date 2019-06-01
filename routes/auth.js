@@ -10,7 +10,7 @@ var cookieParser = require('cookie-parser');
 
 var authController = require('../controllers/authcontroller.js');
 var con = require('./connect-db.js');
-
+var role = require('./role.js');
 module.exports = function(app, passport) {
 
   app.get('/useridcheck', isLoggedIn, authController.useridcheck);

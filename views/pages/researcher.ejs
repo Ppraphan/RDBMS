@@ -9,7 +9,7 @@
 <head>
   <% include ../partials/head %>
 </head>
-<div class="grid-y" >
+<div class="grid-y">
   <div data-sticky-container>
     <nav class="top-bar topbar-responsive" data-sticky data-options="marginTop:0;" style="background:#020304;width:100%" data-top-anchor="1">
       <div class="top-bar-title">
@@ -39,7 +39,7 @@
   </div>
 </div>
 
-<body class="grid-y" >
+<body class="grid-y">
 
   <!-- ส่วนหัว -->
   <div class="grid-x bgportforio" style="height: 20vh">
@@ -96,24 +96,21 @@
 
 
   <!-- แถว ที่สาม -->
-  <div class="grid-x" style="min-height: 70vh;background:#EFEFEF;">
-
-    <div class="cell medium-12" >
-      <div class="md-tabs">
-
-        <ul class="tabs" data-responsive-accordion-tabs="tabs small-accordion medium-tabs large-tabs" id="collapsing-tabs" data-allow-all-closed="true" data-multi-expand="true">
-          <li class="tabs-title is-active"><a href="#panel1c" aria-selected="true">โครงการที่ฉันเป็นหัวหน้าโครงการ</a></li>
-          <li class="tabs-title"><a href="#panel2c">โครงการที่ฉันเป็นผู้ร่วมวิจัย</a></li>
-          <li class="tabs-title"><a href="#panel3c">ผลงานอื่น ๆ ของฉัน</a></li>
-          <div class="slide"></div>
-        </ul>
-
-        <div class="tabs-content" data-tabs-content="collapsing-tabs">
-          <div class="grid-x tabs-panel is-active" id="panel1c" style="background:#EFEFEF">
-            <div class="cell small-6 "></div>
-
-            <div class="cell small-6 " style="display:block;">
-              <table id="myProjectTable" class="hover unstriped myProjectTable">
+  <div class="grid-x" style="padding-bottom:2rem;">
+    <div class="cell medium-2" style="background:#FAFAFA;"></div>
+    <div class="cell medium-7">
+      <div class="grid-x">
+        <div class="cell medium-3">
+          <ul class="vertical tabs" data-tabs id="example-tabs">
+            <li class="tabs-title is-active"><a href="#panel1v" aria-selected="true">โครงการที่เป็นหัวหน้าโครงการวิจัย</a></li>
+            <li class="tabs-title"><a href="#panel2v">โครงการที่เป็นผู้ร่วมโครงการวิจัย</a></li>
+            <li class="tabs-title"><a href="#panel3v">ผลงานอื่น ๆ ของฉัน</a></li>
+          </ul>
+        </div>
+        <div class="cell medium-9 about-the-author">
+          <div class="tabs-content" data-tabs-content="example-tabs">
+            <div class="tabs-panel is-active" id="panel1v">
+              <table id="myProjectTable" class="hover unstriped myProjectTable" style="width:100%">
                 <thead>
                   <tr>
                     <th>ปีงบประมาณ</th>
@@ -124,7 +121,7 @@
 
                 <tbody>
                   <% if(dataLDProj.length){
-                          for(var i = 0;i < dataLDProj.length;i++) { %>
+                                for(var i = 0;i < dataLDProj.length;i++) { %>
                   <tr class="showhim ">
                     <td>
                       <%=dataLDProj[i].grants_Years%>
@@ -135,7 +132,7 @@
                     <td></td>
                   </tr>
                   <% }
-                        }else{ %>
+                              }else{ %>
                   <tr>
                     <td colspan="3">ไม่มีข้อมูล</td>
                   </tr>
@@ -151,16 +148,8 @@
                   </tr>
                 </tfoot>
               </table>
-
             </div>
-
-
-          </div>
-          <div class="grid-x tabs-panel" id="panel2c" style="background:#EFEFEF">
-            <div class="cell small-6 "></div>
-
-            <div class="cell small-6 " style="display:block;">
-
+            <div class="tabs-panel" id="panel2v">
               <table class="hover unstriped myProjectTable h2c" style="width:100%">
                 <thead>
                   <tr>
@@ -172,7 +161,7 @@
 
                 <tbody>
                   <% if(dataRSProj.length){
-                          for(var i = 0;i < dataRSProj.length;i++) { %>
+                                for(var i = 0;i < dataRSProj.length;i++) { %>
                   <tr class="showhim ">
                     <td style="width:55px">
                       <%=dataRSProj[i].grants_Years%>
@@ -184,7 +173,7 @@
                     </td>
                   </tr>
                   <% }
-                        }else{ %>
+                              }else{ %>
                   <tr>
                     <td colspan="3">ไม่มีข้อมูล</td>
                   </tr>
@@ -200,73 +189,18 @@
                   </tr>
                 </tfoot>
               </table>
-
             </div>
-
-
-          </div>
-          <div class="grid-x tabs-panel" id="panel3c" style="background:#EFEFEF">
-            <div class="cell small-6 "></div>
-            <div class="cell small-6 ">
-              <table id="myPortforioTable" class="hover unstriped  " style="width:100%">
-
-                <thead>
-                  <tr>
-                    <th>ลำดับ</th>
-                    <th>ชื่องาน</th>
-                    <th>ประเภทผลงาน</th>
-                    <th></th>
-                    <th></th>
-                  </tr>
-                </thead>
-
-                <tbody>
-                  <% if(dataPortforio.length){
-                          for(var i = 0;i < dataPortforio.length;i++) { %>
-                  <tr class="showhim ">
-                    <td></td>
-                    <td><%=dataPortforio[i].title%></td>
-                    <td>
-                      <% if (dataPortforio[i].categoryID == "1") { %>
-                      ผลงานการเผยแพร่ทางวิชาการ
-                      <% } %>
-                      <% if (dataPortforio[i].categoryID == "2") { %>
-                      ทรัพย์สินทางปัญญา
-                      <% } %>
-                      <% if (dataPortforio[i].categoryID == "3") { %>
-                      รางวัลจากการประกวดงานวิจัย
-                      <% } %>
-                      <% if (dataPortforio[i].categoryID == "4") { %>
-                      สิ่งประดิษฐ์
-                      <% } %>
-                      <% if (dataPortforio[i].categoryID == "5") { %>
-                      ใบรับรอง
-                      <% } %>
-                    </td>
-                    <td>
-                      <a class="small button warning showme" id="RTIDEDNAMEResearchType" onclick="seeMyPort('<%=dataPortforio[i].idportfolio%>')">ดู</a>
-                    </td>
-                    <td>
-                    </td>
-
-                  </tr>
-                  <% }
-                        }else{ %>
-                  <tr>
-                    <td colspan="5">No user</td>
-                  </tr>
-                  <% } %>
-                </tbody>
-              </table>
-
+            <div class="tabs-panel" id="panel3v">
+              
             </div>
-
-
           </div>
+
+
+
         </div>
       </div>
     </div>
-
+    <div class="cell medium-3" style="background:#FAFAFA;"></div>
   </div>
 
 
@@ -328,7 +262,7 @@
     </div>
   </div>
   <% include ../partials/footer %>
-  <script src="js/portforio.js"></script>
+  <script src="js/module/portforio.js"></script>
 
   <script src="js/datatable/portforio.js"></script>
   <script src="js/datatable/my-portforio.js"></script>

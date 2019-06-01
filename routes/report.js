@@ -1,10 +1,10 @@
 var bodyParser = require('body-parser');
 var querystring = require('querystring');
 var con = require('./connect-db.js'); /*เชื่อมต่อฐานข้อมูล*/
-
+var role = require('./role.js');
 module.exports = function(app) {
 
-  app.get('/report', function(req, res) {
+  app.get('/report',role.requireRole("admin","board"), function(req, res) {
     var userinfo = req.user;
     var mses = req.query.valid;
 
@@ -15,7 +15,7 @@ module.exports = function(app) {
 
   });
 
-  app.get('/report-researcher', function(req, res) {
+  app.get('/report-researcher',role.requireRole("admin","board"), function(req, res) {
     var userinfo = req.user;
     var mses = req.query.valid;
 
@@ -25,7 +25,7 @@ module.exports = function(app) {
     });
   });
 
-  app.get('/report-project', function(req, res) {
+  app.get('/report-project',role.requireRole("admin","board"), function(req, res) {
     var userinfo = req.user;
     var mses = req.query.valid;
 
@@ -36,7 +36,7 @@ module.exports = function(app) {
 
   });
 
-  app.get('/report-grants', function(req, res) {
+  app.get('/report-grants',role.requireRole("admin","board"), function(req, res) {
     var userinfo = req.user;
     var mses = req.query.valid;
 
@@ -47,7 +47,7 @@ module.exports = function(app) {
 
   });
 
-
+  /*ขอข้อมูล*/
   app.get("/report/allofyears", function(req, res) {
     var sql = "SELECT distinct grants_Years FROM project.grants  where grants_Type='ทุนภายใน'order by grants_Years;SELECT grants_Years, COUNT(*) c FROM project.grants  where grants_Type='ทุนภายใน'GROUP BY grants_Years HAVING c > 0 order by grants_Years;SELECT distinct grants_Years FROM project.grants  where grants_Type='ทุนภายนอก'order by grants_Years;SELECT grants_Years, COUNT(*) c FROM project.grants  where grants_Type='ทุนภายนอก'GROUP BY grants_Years HAVING c > 0 order by grants_Years;";
     console.log(sql);
@@ -60,7 +60,4 @@ module.exports = function(app) {
       res.send(rows);
     });
   });
-
-
-
 }

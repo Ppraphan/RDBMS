@@ -57,7 +57,7 @@ $(document).ready(function() {
       url: '/all-project/getmaingrantsnamefromyear/?budgetYear=' + budgetYear,
       dataType: 'json',
       success: function(rows) {
-        $('#id_projectParentName').append('<option selected value="-">' + "เลือก" + '</option>');
+        $('#id_projectParentName').append('<option disabled selected value="">' + "เลือก" + '</option>');
         for (var i = 0; i < rows.length; i++) {
           $('#id_projectParentName').append('<option value="' + rows[i].idproject + '">' + rows[i].projectNameTH + '</option>');
         };

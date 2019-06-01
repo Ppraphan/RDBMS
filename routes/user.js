@@ -15,7 +15,7 @@ var role = require('./role.js');
 module.exports = function(app) {
 
   /*ดูข้อมูลส่วนตัว-ของฉัน*/
-  app.get('/me', function(req, res) {
+  app.get('/me',role.requireRole("admin","board","user"), function(req, res) {
     var userinfo = req.user;
     var mses = req.query.valid;
 
@@ -45,69 +45,52 @@ module.exports = function(app) {
     });
 
   });
+  
+  /*ดูข้อมูลส่วนตัว-ของผู้ใช้*/
+  app.get('/user/:id',role.requireRole("admin"), function(req, res) {
+    var userinfo = req.user;
+    var mses = req.query.valid;
 
-  // ขอข้อมูลหน่วยงาน
-  app.get("/me/getUniversityName/", function(req, res) {
-    var catdata = req.query.countryData;
-    console.log("catdata : " + catdata);
-    var sql = "SELECT * FROM project.university where countryISOCode = '" + catdata + "' ;";
+    var userid = req.params.id;
 
-    con.query(sql, function(err, results) {
-      if (err) throw err;
+    var sql1 = "SELECT * FROM project.users WHERE id= '" + userid + "';";
 
-      res.send(results);
+    con.query(sql1, function(err, results) {
+      if (err) console.log("Error Selecting : %s ", err);
+
+
+      var userCoutryID = results[0].country;
+      var userUniID = results[0].university;
+      var userFacID = results[0].faculty;
+      var userDpmentID = results[0].department;
+      var userSubDpmentID = results[0].subdepartment;
+
+      var sql2 = "SELECT * FROM project.country order by countryName;SELECT * FROM project.university WHERE countryISOCode= '" + userCoutryID + "';SELECT * FROM project.faculty WHERE uniID= '" + userUniID + "';SELECT * FROM project.department WHERE facultyID= '" + userFacID + "';SELECT * FROM project.sub_dpment WHERE Sub_Dpment_Parent= '" + userDpmentID + "';SELECT * FROM project.users WHERE id= '" + userid + "';";
+
+      con.query(sql2, function(err, results2) {
+        console.log(sql1);
+        if (err) console.log("Error Selecting : %s ", err);
+        console.log(results2[5]);
+
+        res.render('pages/user', {
+          userinfo: userinfo,
+          messages: mses,
+
+
+          id: userid,
+          data0: results2[0],
+          data1: results2[1],
+          data2: results2[2],
+          data3: results2[3],
+          data4: results2[4],
+          selectuser: results2[5][0],
+        });
+      });
+
     });
-  });
-  app.get("/me/getFacultyinUni/", function(req, res) {
-    var catdata = req.query.universityData;
-    console.log(catdata);
-
-    var sql = "SELECT * FROM project.faculty where uniID ='" + catdata + "';SELECT * FROM project.university,project.faculty,project.department,project.sub_dpment WHERE project.university.uniID = project.faculty.uniID AND project.faculty.facultyID = project.department.facultyID AND project.department.departmentID = project.sub_dpment.Sub_Dpment_Parent AND project.university.uniID=  '" + catdata + "'  AND project.faculty.facultyName= '-';  ";
-
-    con.query(sql, function(err, results) {
-      console.log(results);
-      if (err) throw err;
-      var data = {
-        data0: results[0],
-        data1: results[1]
-      }
-
-      res.send(data);
-    });
 
   });
-  app.get("/me/getDpmentinFac/", function(req, res) {
-    var catdata = req.query.facultyValue;
-    console.log(catdata);
 
-    var sql = "SELECT * FROM project.department where facultyID ='" + catdata + "';SELECT * FROM project.faculty,project.department,project.sub_dpment WHERE  project.faculty.facultyID = project.department.facultyID AND project.department.departmentID = project.sub_dpment.Sub_Dpment_Parent AND project.faculty.facultyID= '" + catdata + "' AND project.department.departmentName='-';  ";
-    console.log(sql);
-    con.query(sql, function(err, results) {
-      if (err) throw err;
-      var data = {
-        data0: results[0],
-        data1: results[1]
-      }
-
-      res.send(data);
-    });
-  });
-  app.get("/me/getSubinDpment/", function(req, res) {
-    var catdata = req.query.departmentValue;
-    console.log(catdata);
-
-    var sql = "SELECT * FROM project.sub_dpment where Sub_Dpment_Parent ='" + catdata + "';SELECT * FROM project.department,project.sub_dpment WHERE   project.department.departmentID = project.sub_dpment.Sub_Dpment_Parent AND project.department.departmentID='" + catdata + "' AND project.sub_dpment.Sub_Dpment_name='-';   ";
-    console.log(sql);
-    con.query(sql, function(err, results) {
-      if (err) throw err;
-      var data = {
-        data0: results[0],
-        data1: results[1]
-      }
-
-      res.send(data);
-    });
-  });
 
   /*แก้ไขข้อมูลส่วนตัวของฉัน*/
   app.post('/editmyinfo', function(req, res) {
@@ -222,50 +205,7 @@ module.exports = function(app) {
 
 
 
-  /*ดูข้อมูลส่วนตัว-ของผู้ใช้*/
-  app.get('/user/:id', function(req, res) {
-    var userinfo = req.user;
-    var mses = req.query.valid;
 
-    var userid = req.params.id;
-
-    var sql1 = "SELECT * FROM project.users WHERE id= '" + userid + "';";
-
-    con.query(sql1, function(err, results) {
-      if (err) console.log("Error Selecting : %s ", err);
-
-
-      var userCoutryID = results[0].country;
-      var userUniID = results[0].university;
-      var userFacID = results[0].faculty;
-      var userDpmentID = results[0].department;
-      var userSubDpmentID = results[0].subdepartment;
-
-      var sql2 = "SELECT * FROM project.country order by countryName;SELECT * FROM project.university WHERE countryISOCode= '" + userCoutryID + "';SELECT * FROM project.faculty WHERE uniID= '" + userUniID + "';SELECT * FROM project.department WHERE facultyID= '" + userFacID + "';SELECT * FROM project.sub_dpment WHERE Sub_Dpment_Parent= '" + userDpmentID + "';SELECT * FROM project.users WHERE id= '" + userid + "';";
-
-      con.query(sql2, function(err, results2) {
-        console.log(sql1);
-        if (err) console.log("Error Selecting : %s ", err);
-        console.log(results2[5]);
-
-        res.render('pages/user', {
-          userinfo: userinfo,
-          messages: mses,
-
-
-          id: userid,
-          data0: results2[0],
-          data1: results2[1],
-          data2: results2[2],
-          data3: results2[3],
-          data4: results2[4],
-          selectuser: results2[5][0],
-        });
-      });
-
-    });
-
-  });
 
   /*แก้ไขข้อมูลส่วนตัวของผู้ใช้*/
   app.post('/edituserinfo', function(req, res) {
@@ -342,7 +282,6 @@ module.exports = function(app) {
       });
     }
   });
-
   app.post('/edituserwork', function(req, res) {
     var userinfo = req.body.idThisUser;
     var mses = req.query.valid;
@@ -373,8 +312,6 @@ module.exports = function(app) {
 
   });
 
-
-
   /*จัดการรหัสผ่าน*/
   app.post('/reset-password', function(req, res) {
     var userinfo = req.user;
@@ -396,6 +333,70 @@ module.exports = function(app) {
       res.redirect('/?valid=' + mses);
     });
 
+  });
+
+
+  // ขอข้อมูลหน่วยงาน
+  app.get("/me/getUniversityName/", function(req, res) {
+    var catdata = req.query.countryData;
+    console.log("catdata : " + catdata);
+    var sql = "SELECT * FROM project.university where countryISOCode = '" + catdata + "' ;";
+
+    con.query(sql, function(err, results) {
+      if (err) throw err;
+
+      res.send(results);
+    });
+  });
+  app.get("/me/getFacultyinUni/", function(req, res) {
+    var catdata = req.query.universityData;
+    console.log(catdata);
+
+    var sql = "SELECT * FROM project.faculty where uniID ='" + catdata + "';SELECT * FROM project.university,project.faculty,project.department,project.sub_dpment WHERE project.university.uniID = project.faculty.uniID AND project.faculty.facultyID = project.department.facultyID AND project.department.departmentID = project.sub_dpment.Sub_Dpment_Parent AND project.university.uniID=  '" + catdata + "'  AND project.faculty.facultyName= '-';  ";
+
+    con.query(sql, function(err, results) {
+      console.log(results);
+      if (err) throw err;
+      var data = {
+        data0: results[0],
+        data1: results[1]
+      }
+
+      res.send(data);
+    });
+
+  });
+  app.get("/me/getDpmentinFac/", function(req, res) {
+    var catdata = req.query.facultyValue;
+    console.log(catdata);
+
+    var sql = "SELECT * FROM project.department where facultyID ='" + catdata + "';SELECT * FROM project.faculty,project.department,project.sub_dpment WHERE  project.faculty.facultyID = project.department.facultyID AND project.department.departmentID = project.sub_dpment.Sub_Dpment_Parent AND project.faculty.facultyID= '" + catdata + "' AND project.department.departmentName='-';  ";
+    console.log(sql);
+    con.query(sql, function(err, results) {
+      if (err) throw err;
+      var data = {
+        data0: results[0],
+        data1: results[1]
+      }
+
+      res.send(data);
+    });
+  });
+  app.get("/me/getSubinDpment/", function(req, res) {
+    var catdata = req.query.departmentValue;
+    console.log(catdata);
+
+    var sql = "SELECT * FROM project.sub_dpment where Sub_Dpment_Parent ='" + catdata + "';SELECT * FROM project.department,project.sub_dpment WHERE   project.department.departmentID = project.sub_dpment.Sub_Dpment_Parent AND project.department.departmentID='" + catdata + "' AND project.sub_dpment.Sub_Dpment_name='-';   ";
+    console.log(sql);
+    con.query(sql, function(err, results) {
+      if (err) throw err;
+      var data = {
+        data0: results[0],
+        data1: results[1]
+      }
+
+      res.send(data);
+    });
   });
 
 }

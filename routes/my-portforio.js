@@ -6,7 +6,7 @@ var url = require('url');
 var querystring = require('querystring');
 var con = require('./connect-db.js');
 var Busboy = require('busboy');
-
+var role = require('./role.js');
 
 module.exports = function(app) {
 

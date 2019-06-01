@@ -125,12 +125,15 @@ $(document).ready(function() {
       dataType: 'json',
       success: function(results) {
         $('#ID_university').empty();
+        $('#ID_faculty').empty();
+        $('#ID_department').empty();
+        $('#ID_subdepartment').empty();
 
-        $('#ID_faculty').append('<option disabled="disabled" selected="selected" value="-">' + "เลือก" + '</option>');
-        $('#ID_department').append('<option disabled="disabled"selected="selected" value="-">' + "เลือก" + '</option>');
-        $('#ID_subdepartment').append('<option disabled="disabled"selected="selected" value="-">' + "เลือก" + '</option>');
+        $('#ID_faculty').append('<option disabled="disabled" selected="selected" value="">' + "เลือก" + '</option>');
+        $('#ID_department').append('<option disabled="disabled"selected="selected" value="">' + "เลือก" + '</option>');
+        $('#ID_subdepartment').append('<option disabled="disabled"selected="selected" value="">' + "เลือก" + '</option>');
         // alert(data.data0[0].uniName);
-        $('#ID_university').append('<option value="" >' + "กรุณาเลือกมหาวิทยาลัย" + '</option>');
+        $('#ID_university').append('<option value="" disabled="disabled">' + "กรุณาเลือกมหาวิทยาลัย" + '</option>');
         for (var i = 0; i < results.length; i++) {
           if (results[i].uniName != '-' && results[i].uniName != 'example') {
             $('#ID_university').append('<option  value="' + results[i].uniID + '">' + results[i].uniName + '</option>');

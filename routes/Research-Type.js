@@ -1,11 +1,11 @@
 var mysql = require('mysql');
 var bodyParser = require('body-parser');
 var querystring = require('querystring');
-
+var role = require('./role.js');
 var con = require('./connect-db.js');
 module.exports = function(app) {
 
-  app.get('/research-type', function(req, res) {
+  app.get('/research-type',role.requireRole("admin"), function(req, res) {
     var userinfo =req.user;
     var mses = req.query.valid;
     var query = con.query('SELECT * FROM tresearchtype', function(err, rows) {
@@ -53,7 +53,7 @@ module.exports = function(app) {
     });
   });
 
-  app.get('/research-type/delete/:id', function(req, res) {
+  app.get('/research-type/delete/:id',role.requireRole("admin"), function(req, res) {
     var idRST = req.params.id;
 
     console.log(idRST);

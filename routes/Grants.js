@@ -1,39 +1,39 @@
 var mysql = require('mysql');
 var con = require('./connect-db.js'); /*เชื่อมต่อฐานข้อมูล*/
-
+var role = require('./role.js');
 
 module.exports = function(app) {
 
-  app.get('/grants', function(req, res) {
+  app.get('/grants',role.requireRole("admin"), function(req, res) {
     var mses = req.query.valid;
-    var userinfo =req.user;
+    var userinfo = req.user;
     var query = con.query('SELECT * FROM project.grants', function(err, rows) {
       if (err)
         console.log("Error Selecting : %s ", err);
       res.render('pages/grants', {
-        userinfo:userinfo,
+        userinfo: userinfo,
         messages: mses,
         data: rows,
       });
     });
   });
-/*get ชื่อทุนวิจัยจากปีที่ถูกเลือก*/
-app.get("/grants/getgrantsnamefromyear/", function(req, res) {
-  var catdata = req.query.budgetYear;
-  console.log(catdata);
+  /*get ชื่อทุนวิจัยจากปีที่ถูกเลือก*/
+  app.get("/grants/getgrantsnamefromyear/", function(req, res) {
+    var catdata = req.query.budgetYear;
+    console.log(catdata);
 
-  var sql = "SELECT * FROM project.grants WHERE grants_Years ='" + catdata + "' ";
-  console.log(sql);
-  con.query(sql, function(err, rows) {
-    if (err) throw err;
-    res.send(rows);
+    var sql = "SELECT * FROM project.grants WHERE grants_Years ='" + catdata + "' ";
+    console.log(sql);
+    con.query(sql, function(err, rows) {
+      if (err) throw err;
+      res.send(rows);
+    });
   });
-});
 
 
   app.post('/grants', function(req, res) {
     console.log(req.body.grants_Name);
-    if(req.body.grants_Name){
+    if (req.body.grants_Name) {
       var grants_Name = req.body.grants_Name;
       var grants_Years = req.body.grants_Years;
       var grants_Supporter = req.body.grants_Supporter;
@@ -51,8 +51,7 @@ app.get("/grants/getgrantsnamefromyear/", function(req, res) {
           console.log("Error Selecting : %s ", err);
       });
       res.redirect('/grants');
-    }
-    else{
+    } else {
       res.redirect('/grants');
     }
 
@@ -70,8 +69,6 @@ app.get("/grants/getgrantsnamefromyear/", function(req, res) {
     res.redirect('/grants');
   });
 
-
-
   app.get("/grants/detail/:catdata2", function(req, res) {
     var catdata = req.params.catdata2;
     console.log(catdata);
@@ -87,7 +84,7 @@ app.get("/grants/getgrantsnamefromyear/", function(req, res) {
   });
 
   app.post('/grants/update/', function(req, res) {
-    var idGrants =req.body.gIDEdit;
+    var idGrants = req.body.gIDEdit;
     var grants_Name = req.body.grants_Name;
     var grants_Years = req.body.grants_Years;
     var grants_Supporter = req.body.grants_Supporter;
@@ -95,10 +92,10 @@ app.get("/grants/getgrantsnamefromyear/", function(req, res) {
 
 
     var sql = "UPDATE grants SET grants_Name ='" + req.body.grants_Name +
-              "',grants_Years='"+ req.body.grants_Years +
-              "',grants_Supporter='"+ req.body.grants_Supporter +
-              "',grants_Type='"+ req.body.grants_Type +
-              "' WHERE idGrants ='" + req.body.gIDEdit + "' ";
+      "',grants_Years='" + req.body.grants_Years +
+      "',grants_Supporter='" + req.body.grants_Supporter +
+      "',grants_Type='" + req.body.grants_Type +
+      "' WHERE idGrants ='" + req.body.gIDEdit + "' ";
     console.log(sql);
     con.query(sql, function(err, rows) {
       if (err)

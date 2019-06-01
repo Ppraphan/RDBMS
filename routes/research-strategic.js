@@ -2,10 +2,10 @@ var mysql = require('mysql');
 var bodyParser = require('body-parser');
 var querystring = require('querystring');
 const con = require('./connect-db.js');
-
+var role = require('./role.js');
 module.exports = function(app) {
 
-  app.get('/research-strategic', function(req, res) {
+  app.get('/research-strategic',role.requireRole("admin"), function(req, res) {
     var userinfo =req.user;
     var mses = req.query.valid;
     var query = con.query('SELECT * FROM researchstrategic', function(err, rows) {

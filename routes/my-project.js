@@ -1,7 +1,7 @@
 var bodyParser = require('body-parser');
 var querystring = require('querystring');
 var con = require('./connect-db.js'); /*เชื่อมต่อฐานข้อมูล*/
-
+var role = require('./role.js');
 module.exports = function(app) {
 
   /*เปิดหน้าโครงการวิจัยใหม่*/

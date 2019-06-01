@@ -1,9 +1,9 @@
 var con = require('./connect-db.js'); /*เชื่อมต่อฐานข้อมูล*/
 var bodyParser = require("body-parser");
-
+var role = require('./role.js');
 module.exports = function(app) {
 
-  app.get('/department', function(req, res) {
+  app.get('/department',role.requireRole("admin"), function(req, res) {
     var userinfo = req.user;
     var mses = req.query.valid;
     var sql = "select * from project.faculty , project.department , project.sub_dpment , project.university , project.country where project.country.countryISOCode = project.university.countryISOCode AND project.faculty.uniID = project.university.uniID AND project.department.facultyID = project.faculty.facultyID AND project.department.departmentID = project.sub_dpment.Sub_Dpment_Parent;"

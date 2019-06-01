@@ -21,7 +21,10 @@
               <h1>แบบฟอร์ม</h1>
               <input id="txtSearch" type="search" name="search" placeholder="ค้นหาข้อมูล" class="animated-search-form form-control">
               <div align="right" style="padding-right:1rem">
-                <a class="button secondary" data-open="mobile-ios-modal" id="ID_DC_newForm">อัพโหลดแบบฟอร์ม</a>
+                <% if (userinfo.userPermission == "admin") { %>
+                  <a class="button secondary" data-open="mobile-ios-modal" id="ID_DC_newForm">อัพโหลดแบบฟอร์ม</a>
+                <% } %>
+
               </div>
 
               <!-- เพิ่มไฟล์ -->

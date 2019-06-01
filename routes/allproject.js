@@ -4,6 +4,8 @@ var nodemailer = require('nodemailer'); /*ส่งอีเมล*/
 
 var con = require('./connect-db.js'); /*เชื่อมต่อฐานข้อมูล*/
 
+var role = require('./role.js');
+
 var transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
@@ -14,7 +16,7 @@ var transporter = nodemailer.createTransport({
 
 module.exports = function(app) {
 
-  app.get('/project/:idproject', function(req, res) {
+  app.get('/project/:idproject',role.requireRole("admin"), function(req, res) {
     var userinfo = req.user;
     var mses = req.query.valid;
 
@@ -34,8 +36,26 @@ module.exports = function(app) {
 
   });
 
+  /*หน้าโครงการวิจัยทั้งหมด*/
+  app.get('/all-project',role.requireRole("admin"), function(req, res) {
+    var userinfo = req.user;
+    var mses = req.query.valid;
+
+    var sql = "SELECT idproject,projectNameTH,stateOfProJ,grants_Years FROM project.project,project.grants WHERE project.project.idGrant = project.grants.idGrants";
+
+    con.query(sql, function(err, rows) {
+
+      res.render('pages/all-project', {
+        userinfo: userinfo,
+        messages: mses,
+        data0: rows,
+      });
+    });
+
+  });
+
   /*เปิดหน้าโครงการวิจัยใหม่*/
-  app.get('/new-project', function(req, res) {
+  app.get('/new-project',role.requireRole("admin"), function(req, res) {
 
     var mses = req.query.valid;
     var userinfo = req.user;
@@ -63,7 +83,6 @@ module.exports = function(app) {
       });
     });
   });
-
   /*้เพิ่มโครงการใหม่*/
   app.post('/new-project', function(req, res) {
     console.log("--------------------Post to /new-project-------------------------------------")
@@ -217,8 +236,8 @@ module.exports = function(app) {
     };
 
     async function dogood() {
-      // await dogoodB(newProjID);
-      // await dogoodC(newProjID);
+      await dogoodB(newProjID);
+      await dogoodC(newProjID);
 
       await dogoodA(name_projectParentName, projectMain);
     }
@@ -230,11 +249,6 @@ module.exports = function(app) {
     res.redirect('/all-project?valid=' + mses);
 
   });
-
-
-
-
-
 
   /*้แก้ไขโครงการ*/
   app.post('/update-project', function(req, res) {
@@ -286,6 +300,17 @@ module.exports = function(app) {
 
     var emailRS = [];
     var nameProJRS;
+
+    if (projectSet == 1) {
+      if (projectMain == 1) {
+        name_projectParentName = projID;
+        console.log("name_projectParentName = " + name_projectParentName);
+      }
+    }
+    if (projectSet == 0) {
+      projectMain = "0";
+      name_projectParentName = "0";
+    }
 
     function dogoodA() {
       var sql0 = "SELECT stateOfProJ,projectNameTH FROM project.project WHERE idproject ='" + projID + "';";
@@ -355,6 +380,7 @@ module.exports = function(app) {
     };
 
     function dogoodB() {
+
       var sql1 = "UPDATE project.project SET projectNameTH = '" + nameProjectTH + "', projectNameEN = '" + nameProjectEN + "', projectSet = '" + projectSet + "', projectMain = '" + projectMain + "', projectParent = '" + name_projectParentName + "', projectYears = '" + projectYears + "' , idGrant = '" + budgetName + "' , projectAmount = '" + projectAmount + "', countryISOCode = '" + country + "' , uniID = '" + university + "', facultyID = '" + faculty + "', departmentID = '" + department + "', subDepartmentID = '" + subdepartment + "' , researchTypeID = '" + name_PJ_ADD_ResearcType + "' , researchBranchID = '" + name_PJ_ADD_Researchbranch + "', researchFormID = '" + name_PJ_ADD_Researchform + "', researchStrategicID = '" + name_PJ_ADD_Researchstrategic + "', stateOfProJ = '" + stateOfProJ + "'  , dateState1 = '" + dateState1 + "' , dateState2 = '" + dateState2 + "', dateState3 = '" + dateState3 + "', dateState4 = '" + dateState4 + "', dateState5 = '" + dateState5 + "' , dateState6 = '" + dateState6 + "', dateState7 = '" + dateState7 + "', dateState8 = '" + dateState8 + "' , dateState9 = '" + dateState9 + "', dateState10 = '" + dateState10 + "', dateState11 = '" + dateState11 + "', dateState12 = '" + dateState12 + "' WHERE (idproject = '" + projID + "');";
       console.log(sql1);
       con.query(sql1, function(err) {
@@ -1141,7 +1167,7 @@ module.exports = function(app) {
   });
 
   /*ดูรายละเอียดโครงการ ของผู้ใช้งาน*/
-  app.get('/view-project/:id', function(req, res) {
+  app.get('/view-project/:id',role.requireRole("admin"), function(req, res) {
     var userinfo = req.user;
     var mses = req.query.valid;
 
@@ -1218,7 +1244,7 @@ module.exports = function(app) {
   });
 
   /*ดูรายละเอียดโครงการ ของฉัน*/
-  app.get('/viewmy-project/:id', function(req, res) {
+  app.get('/viewmy-project/:id',role.requireRole("admin","board","user"), function(req, res) {
     var userinfo = req.user;
     var mses = req.query.valid;
 
@@ -1265,7 +1291,7 @@ module.exports = function(app) {
   });
 
   /*ลบโครงการวิจัย*/
-  app.get('/deleteproject/:id', function(req, res) {
+  app.get('/deleteproject/:id',role.requireRole("admin"), function(req, res) {
     var projID = req.params.id;
     console.log(projID);
 
@@ -1321,23 +1347,6 @@ module.exports = function(app) {
       res.send(rows);
       console.log(rows);
     });
-  });
-  /*หน้าโครงการวิจัยทั้งหมด*/
-  app.get('/all-project', function(req, res) {
-    var userinfo = req.user;
-    var mses = req.query.valid;
-
-    var sql = "SELECT idproject,projectNameTH,stateOfProJ,grants_Years FROM project.project,project.grants WHERE project.project.idGrant = project.grants.idGrants";
-
-    con.query(sql, function(err, rows) {
-
-      res.render('pages/all-project', {
-        userinfo: userinfo,
-        messages: mses,
-        data0: rows,
-      });
-    });
-
   });
   /*get ชื่อทุนวิจัยจากปีที่ถูกเลือก*/
   app.get("/all-project/getmaingrantsnamefromyear/", function(req, res) {

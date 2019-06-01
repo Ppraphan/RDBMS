@@ -5,7 +5,7 @@ var bodyParser = require("body-parser");
 var url = require('url');
 var querystring = require('querystring');
 const con = require('./connect-db.js');
-
+var role = require('./role.js');
 
 module.exports = function(app) {
 

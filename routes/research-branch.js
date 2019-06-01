@@ -3,10 +3,10 @@ var bodyParser = require('body-parser');
 var querystring = require('querystring');
 
 var con = require('./connect-db.js');
-
+var role = require('./role.js');
 module.exports = function(app) {
 
-  app.get('/research-branch', function(req, res) {
+  app.get('/research-branch',role.requireRole("admin"), function(req, res) {
     var userinfo =req.user;
     var mses = req.query.valid;
     var query = con.query('SELECT * FROM researchbranch', function(err, rows) {
@@ -55,7 +55,7 @@ module.exports = function(app) {
     });
   });
 
-  app.get('/research-branch/delete/:id', function(req, res) {
+  app.get('/research-branch/delete/:id',role.requireRole("admin"), function(req, res) {
     var idRST = req.params.id;
 
     console.log(idRST);

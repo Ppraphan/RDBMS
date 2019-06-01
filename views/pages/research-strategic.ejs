@@ -20,14 +20,14 @@
 
 				<div class="cell small-6-container full bgforms" align="center">
 					<div style="margin:35px;">
-						<h1>จัดการยุทศาสตร์งานวิจัย</h1>
+						<h1>จัดการยุทธศาสตร์งานวิจัย</h1>
 					</div>
 				</div>
 
 				<div class="grid-x">
 					<div class="grid-y small-6">
 						<div class="cell small-6" id="id_RS_New_Div" style="padding:2.5rem;">
-							<h3>เพิ่มยุทศาสตร์งานวิจัยใหม่</h3>
+							<h3>เพิ่มยุทธศาสตร์งานวิจัยใหม่</h3>
 
 							<form class="myform" name="newResearchForm" ref='uploadForm' encType="multipart/form-data" action="/research-strategic"method="post" id="id_RS_form_newStrategic">
 								<div class="grid-x grid-padding-x">
@@ -35,9 +35,9 @@
 										<label for="middle-label" class="text-right middle"><b>ชื่อใหม่</b></label>
 									</div>
 									<div class="small-9 cell RSCLASSINPUTfield">
-										<input type="text"  name="file_Name" placeholder="ชื่อยุทศาสตร์งานวิจัยใหม่" id="id_RS_input_newRSName">
+										<input type="text"  name="file_Name" placeholder="ชื่อยุทธศาสตร์งานวิจัยใหม่" id="id_RS_input_newRSName">
 										<span class="label alert " id="id_RS_label_alertEmptryName_2"><i class="fi-x-circle"></i>กรุณากรอกข้อมูล</span>
-										<span class="label alert hide" id="id_RS_label_alertDuplicateName_2"><i class="fi-x-circle"></i>ยุทศาสตร์งานวิจัยนี้ มีแล้ว</span>
+										<span class="label alert hide" id="id_RS_label_alertDuplicateName_2"><i class="fi-x-circle"></i>ยุทธศาสตร์งานวิจัยนี้ มีแล้ว</span>
 									</div>
 								</div>
 								<input type="submit" value="เพิ่ม" class="button" id="id_RS_comfirm_newRSName" disabled="disabled">
@@ -56,9 +56,9 @@
 									<div class="small-9 cell RSCLASSINPUTEDITfield">
 										<label for="middle-label" class="text-left middle" id="id_RS_label_rsOldname"></label>
 										<input name="file_Nameold" type="hidden" id="id_RS_input_rsOldname" value="">
-										<input type="text" id="id_RS_input_rsNewname" name="file_NameUpdate" placeholder="ชื่อยุทศาสตร์งานวิจัยใหม่">
+										<input type="text" id="id_RS_input_rsNewname" name="file_NameUpdate" placeholder="ชื่อยุทธศาสตร์งานวิจัยใหม่">
 										<span class="label alert hide" id="id_RS_label_alertEmptryName_1"><i class="fi-x-circle"></i>กรุณากรอกข้อมูล</span>
-										<span class="label alert hide" id="id_RS_label_alertDuplicateName_1"><i class="fi-x-circle"></i>ยุทศาสตร์งานวิจัยนี้ มีแล้ว</span>
+										<span class="label alert hide" id="id_RS_label_alertDuplicateName_1"><i class="fi-x-circle"></i>ยุทธศาสตร์งานวิจัยนี้ มีแล้ว</span>
 									</div>
 								</div>
 								<input type="submit" value="ยืนยัน" class="button" id="id_RS_comfirm_editRSName" disabled="disabled">
@@ -73,7 +73,7 @@
 								<thead>
 									<tr>
 										<th></th>
-										<th>ชื่อยุทศาสตร์</th>
+										<th>ชื่อยุทธศาสตร์</th>
 										<th></th>
 										<th></th>
 									</tr>
@@ -88,7 +88,7 @@
 											<%=data[i].rsearchStrategicName%>
 										</td>
 										<td><a class="small button warning showme" id="id_RS_edit_OpenEditRSName" onclick="myFunction('<%= data[i].rsearchStrategicName %>')" data-open="editType">แก้ไข</a></td>
-										<td><a class="small button alert showme" onclick="return confirm('คุณต้องการที่จะ ลบ <%= data[i].rsearchStrategicName %> หรือไม่ ?');" href="/research-type/delete/<%=data[i].researchStrategicID %>">ลบ</a></td>
+										<td><a class="small button alert showme" onclick="return confirm('คุณต้องการที่จะ ลบ <%= data[i].rsearchStrategicName %> หรือไม่ ?');" href="/research-strategic/delete/<%=data[i].researchStrategicID %>">ลบ</a></td>
 
 									</tr>
 									<% }
