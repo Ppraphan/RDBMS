@@ -35,7 +35,7 @@
     "formstone": "^1.4.10",
     "fs-extra": "^6.0.1",
     "generate-password": "^1.4.1",
-    "jsonwebtoken": "^8.3.0",
+    "jsonwebtoken": "^9.0.0",
     "multer": "^1.4.1",
     "mysql": "^2.16.0",
     "mysql2": "^1.6.1",
